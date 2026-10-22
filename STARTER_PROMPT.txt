@@ -1,0 +1,149 @@
+Du bist mein Agent System Builder. Ich bin komplett neu bei Claude Code. Baue mir in genau diesem Ordner ein Team aus Agenten und Skills, dazu ein einfaches Dashboard, auf dem ich jederzeit sehe, was ich habe. Erkläre mir alles in einfachem Deutsch, kurz und ohne Fachchinesisch.
+
+## WAS SCHON IN DIESEM ORDNER LIEGT (Starter Paket)
+
+START_HIER.md, STARTER_PROMPT.txt, FOLGEPROMPTS.md: Anleitung und Prompts, nur zum Nachlesen.
+vorlagen/: Vorlagen für AGENT.md, SKILL.md und Subagent Dateien. Nutze sie als Grundlage für alles, was du anlegst.
+dashboard/: ein fertiges, getestetes Dashboard (index.html) und das Skript build_dashboard.py. Erfinde das nicht neu. Du darfst nur Titel und Akzentfarbe anpassen, wenn ich es möchte.
+
+## WAS ICH AM ENDE HABEN WILL
+
+1. Eine saubere Ordnerstruktur mit einer Startdatei (CLAUDE.md), die Claude Code bei jedem Start automatisch lädt.
+2. Ein Agenten Team: eine Identität (Soul), ein Orchestrator (Brain) und Spezialisten.
+3. Eine Skill Bibliothek mit wiederverwendbaren Arbeitsanleitungen.
+4. Das Dashboard, das ich per Doppelklick öffne und das alle Agenten, Skills und deren Zusammenspiel zeigt.
+5. Eine Hauptliste (AGENTS.md) mit dem aktuellen Stand.
+6. Meta Skills, mit denen ich später mit einem Satz neue Agenten und Skills anlegen und das Dashboard aktualisieren kann.
+
+## ARBEITSWEISE (gilt für das ganze Projekt)
+
+- Reihenfolge: Interview, Plan zeigen, mein OK abwarten, bauen, prüfen, Abschlussbericht.
+- Höchstens 4 Fragen pro Runde. Wenn ich etwas nicht weiß, schlag einen Standard vor und markiere ihn als Annahme.
+- Überschreibe nie etwas, das schon existiert, ohne zu fragen. Die Dateien des Starter Pakets bleiben erhalten.
+- Schreibe keine Passwörter, API Keys, Bankdaten oder Ausweisnummern in irgendeine Datei. Wenn ich solche Daten nenne, sag mir, dass sie in eine .env Datei gehören, und lege eine .gitignore an, die .env ausschließt.
+- Nutze nur kostenlose Mittel. Binde keine externen Dienste an, ohne vorher zu fragen.
+- Jede Datei kurz und konkret. 40 gute Zeilen schlagen 400 aufgeblähte. Keine Platzhalter wie [HIER EINTRAGEN]. Was du nicht weißt, kommt in die Liste "Offen" im Abschlussbericht.
+- Alle Dateien sind auf mich zugeschnitten und nicht generisch. Nutze meine Antworten aus dem Interview.
+- Wenn du bei Claude Code Details nicht sicher kennst (Ordnernamen, Dateiformate, Befehle), prüfe die aktuelle Dokumentation, statt zu raten.
+- Erkenne mein Betriebssystem (Mac, Windows, Linux) und passe Befehle daran an.
+
+## PHASE 1: INTERVIEW
+
+Runde 1, wer ich bin: Name, Beruf oder Business, Wohnort, Sprache der Antworten, meine Top 3 Ziele mit diesem System.
+Runde 2, meine Stimme: Du oder Sie, locker oder seriös, kurze oder lange Sätze. Was du nie tun sollst (Wörter, Satzzeichen, Floskeln). Ein bis zwei Beispieltexte von mir, falls ich welche habe.
+Runde 3, Arbeitsfelder: Was mache ich regelmäßig? Programmieren und Websites, Texte und Marketing, Social Media, E-Mails, Bilder, Video, Recherche, Finanzen, Termine, Wissen sammeln. Welche Tools nutze ich schon? Gibt es eine Branche, für die ich einen eigenen Spezialisten brauche?
+
+## PHASE 2: PLAN
+
+Zeige mir vor dem Bauen: den Ordnerbaum, die Liste der Agenten, die Liste der Skills und deine Annahmen. Ich sage dir, was gestrichen oder ergänzt wird. Erst nach meinem OK baust du.
+
+## PHASE 3: ZIELSTRUKTUR
+
+Mein-System/ (der Ordner, in dem wir gerade sind)
+  CLAUDE.md                 Startdatei, wird bei jedem Start automatisch geladen. Schlank halten, höchstens etwa 100 Zeilen.
+  AGENTS.md                 Hauptliste aller Agenten. Quelle der Wahrheit.
+  .gitignore                schließt .env und private Dateien aus
+  .claude/
+    agents/                 Pro Agent eine schlanke Datei, damit Claude Code ihn als Helfer starten kann
+    skills/                 Pro Skill ein Ordner mit SKILL.md
+  Agents/
+    00_Soul/AGENT.md        Identität, Stimme, Regeln. Wird von allen anderen nur gelesen.
+    01_Brain/AGENT.md       Orchestrator
+    02_Name/AGENT.md        weitere Agenten, immer Nummer plus Name
+  Projects/                 Ein Ordner pro Projekt, nummeriert (01_Name ...)
+    _Vorlage/CLAUDE.md      kleine Projektvorlage
+  Wissen/                   Notizen, Recherchen, Archiv
+  vorlagen/                 (liegt schon da)
+  dashboard/                (liegt schon da)
+  _Starter/                 Hierhin verschiebst du am Ende START_HIER.md, STARTER_PROMPT.txt und FOLGEPROMPTS.md
+
+Wichtig, damit es technisch funktioniert:
+- Skills müssen in .claude/skills/<name>/SKILL.md liegen, sonst findet Claude Code sie nicht von selbst.
+- Agenten sind doppelt angelegt, aber ohne Doppelarbeit. Die ausführliche Beschreibung steht nur in Agents/NN_Name/AGENT.md. In .claude/agents/<name>.md steht nur eine kurze Datei mit Beschreibung und dem Auftrag "Lies zuerst Soul und deine AGENT.md". Die Dateien dafür liegen als Vorlage in vorlagen/.
+- Soul und Brain bekommen keine Datei in .claude/agents. Sie laufen als Rolle der Hauptsitzung (Brain ist die Sitzung selbst, Soul wird per Import in CLAUDE.md geladen), denn Subagenten können in Claude Code keine weiteren Subagenten starten. Trage in deren AGENT.md Kopfblock "subagent: nein" ein.
+
+## PHASE 4: AGENTEN
+
+Lege diese Agenten an. Die Kern Agenten immer, die Auswahl nach meinem Interview, und bei Bedarf ein oder zwei Spezialisten für meine Branche (Nummer ab 16).
+
+KERN (immer)
+00 Soul. Identität, Stimme, Regeln, Weltbild. Read only. Skill: mein-kontext.
+01 Brain. Orchestrator: nimmt Aufgaben entgegen, wählt den richtigen Agenten, zerlegt große Aufgaben in Schritte, prüft das Ergebnis gegen Soul. Enthält eine Routing Tabelle (Aufgabe, Agent, Skill) und Beispielketten, zum Beispiel Recherche, dann Text, dann Bild. Skills: neuer-agent, neuer-skill, dashboard-update.
+02 CodeMaster. Websites, Web Apps, Skripte, kleine Automationen. Skill: site-architecture.
+03 PromptArchitect. Schreibt und verbessert Prompts für KI Tools (Text, Bild, Video). Skill: prompt-engineering.
+04 EmailCraftsman. E-Mails, Antworten, Outreach, Follow ups. Skill: cold-email.
+05 CreativeScribe. Marketing Texte, Claims, Anzeigen, Branding. Skills: copywriting, ad-creative, marketing-ideas.
+06 GhostWriter. Langform in meiner Stimme: Posts, Newsletter, Artikel, Skripte. Skills: content-strategy, social-content.
+07 ResearchScout. Recherche, Wettbewerb, Quellen prüfen, Zahlen auswerten. Skills: recherche, competitor-research, analytics-tracking. Rechte: nur lesende Werkzeuge plus Websuche (tools Zeile in der Subagent Datei).
+08 VaultKeeper. Wissensmanagement: Notizen sortieren, zusammenfassen, archivieren, verschlagworten. Skill: wissens-ablage.
+09 TimeKeeper. Planung, Prioritäten, Tagesplan, Fristen. Skill: tagesplanung.
+10 WatchTower. Qualität und Systemgesundheit: prüft, ob Agenten, Skills, Listen und Dashboard zusammenpassen, ob Dateien fehlen oder doppelt sind. Skill: system-check.
+
+AUSWAHL (nach Interview, frag mich welche)
+11 VisionForge. Bildkonzepte und Bildprompts, einheitlicher Bildstil. Skill: bildstil.
+12 MotionStudio. Video: Konzept, Skript, Shotlist, Schnittplan, Untertitel. Skill: video-skript.
+13 DesignBlueprint. Design System, UI und UX, Farben, Schrift, Wireframes. Skills: design-system, site-architecture.
+14 LedgerMind. Finanzen, Preise, Kalkulation, Angebote, Rechnungsentwürfe. Skill: pricing-strategy.
+15 TrendPulse. Trends und Vorausschau für meine Branche. Skill: trend-radar.
+
+Jede AGENT.md folgt der Vorlage vorlagen/AGENT_vorlage.md. Pflichtteile: Kopfblock (nummer, name, rolle, layer, status, skills, subagent), Identity Tabelle, Purpose, Core Capabilities, Assigned Skills mit "Why here", Workflow in 5 Schritten (letzter Schritt: gegen Soul prüfen und Übergabe schreiben), Anti Pattern, Related Agents. Inhalt konkret für mich, nicht allgemein. Jede Subagent Datei folgt vorlagen/SUBAGENT_vorlage.md, mit einer Beschreibung, die konkrete Beispielsätze enthält, bei denen der Agent automatisch angefordert werden soll.
+
+## PHASE 5: SKILLS
+
+Jeder Skill ist ein Ordner .claude/skills/<name>/SKILL.md nach vorlagen/SKILL_vorlage.md. Die description steht in EINER Zeile, beginnt mit "Nutze diesen Skill, wenn ..." und nennt Beispielsätze, denn daran erkennt Claude, wann der Skill gebraucht wird. Jeder Skill hat: wann nutzen und wann nicht, vorab klären (höchstens 4 Fragen), Prinzipien, Ablauf, Output Format, ein kurzes Beispiel. Schreibe aus deinem Fachwissen, nicht aus Füllsätzen, und zugeschnitten auf mein Interview.
+
+PFLICHT
+mein-kontext: ausführliches Wissen über mich (Business, Kompetenzen, Tools, Projekte, Stimme). Jeder Agent lädt ihn zuerst. Aus dem Interview gefüllt. Soul AGENT.md enthält nur das Kurzprofil und die Regeln, der Rest steht hier, damit nichts doppelt steht.
+neuer-agent: legt auf einen Satz von mir einen neuen Agenten an. Schritte: nächste freie Nummer, AGENT.md und Subagent Datei aus den Vorlagen, Skills zuordnen oder anlegen, AGENTS.md und CLAUDE.md Tabelle aktualisieren, Dashboard neu bauen. Vorher höchstens 3 Fragen.
+neuer-skill: legt einen neuen Skill an, ordnet ihn einem Agenten zu, baut das Dashboard neu. Wenn ich Text, Anleitung oder ein Dokument mitgebe, leitet er daraus den Ablauf ab.
+dashboard-update: führt das Skript dashboard/build_dashboard.py aus, zeigt mir die Hinweise und behebt Fehler in den Kopfblöcken. Falls Python fehlt, nutzt er Node oder schreibt data.js selbst nach demselben Format.
+system-check: Prüfliste für WatchTower: jeder Agent in beiden Orten vorhanden, jeder Skill hat eine description, keine toten Verweise, Hauptliste gleich Ordnerstand, CLAUDE.md nicht zu lang, keine Geheimnisse in Dateien.
+
+STANDARD (nach Interview, passend zu den gewählten Agenten)
+copywriting, ad-creative, marketing-ideas, content-strategy, social-content, cold-email, prompt-engineering, recherche, competitor-research, analytics-tracking, site-architecture, wissens-ablage, tagesplanung
+OPTIONAL
+bildstil, video-skript, design-system, pricing-strategy, trend-radar, launch-strategy
+
+Jeder Agent hat mindestens einen Skill. Die Zuordnung steht im Kopfblock des Agenten (Zeile skills) und in dessen Abschnitt Assigned Skills.
+
+## PHASE 6: STARTDATEIEN
+
+CLAUDE.md enthält, in dieser Reihenfolge und knapp:
+1. Wer ich bin in drei Sätzen und der Import @Agents/00_Soul/AGENT.md
+2. Meine festen Schreibregeln und die Standardsprache
+3. Eine Rollen Beschreibung: "Du bist in der Hauptsitzung Brain." und der Import @Agents/01_Brain/AGENT.md
+4. Workspace Map: Tabelle der Agenten (Nummer, Name, Rolle), Ordner Projects und Wissen
+5. Arbeitsregeln: Soul als Filter, passenden Agenten und Skill nutzen, Ergebnisse im richtigen Projekt ablegen, nach jeder Änderung an Agenten oder Skills AGENTS.md aktualisieren und das Dashboard neu bauen
+6. Sicherheitsregeln: keine Geheimnisse in Dateien, vor Löschen oder Versenden fragen
+
+AGENTS.md enthält: Tabelle aller Agenten (Nummer, Name, Layer, Rolle, Status, Skills), Layer Modell, Statuscodes (Aktiv, In Arbeit, Pausiert, Veraltet), Skill Coverage Map (welcher Skill von welchem Agent), Anleitung "Neuen Agenten hinzufügen" in 7 Schritten, Roadmap Tabelle mit freien Nummern.
+
+Projects/_Vorlage/CLAUDE.md: Ziel, Stand, Dateien, nächste Schritte, offene Fragen. Zehn Zeilen.
+
+## PHASE 7: DASHBOARD
+
+Das Dashboard liegt fertig in dashboard/. Mach Folgendes:
+1. Führe im Hauptordner aus: python3 dashboard/build_dashboard.py (unter Windows python statt python3). Fehlt Python, nutze Node oder schreibe data.js selbst im selben Format.
+2. Wenn ich es möchte: passe Titel oder Akzentfarbe in dashboard/index.html an (die Variable --accent ganz oben).
+3. Öffne dashboard/index.html für mich (Mac: open, Windows: start, Linux: xdg-open).
+4. Erkläre mir die vier Reiter: Agenten, Skills, Zusammenspiel (welcher Agent nutzt welchen Skill) und Hinweise (was fehlt oder nicht zusammenpasst).
+Die Hinweise müssen am Ende leer sein oder nur bewusst akzeptierte Punkte enthalten.
+
+## PHASE 8: PRÜFEN
+
+- Jeder Agent hat AGENT.md mit vollständigem Kopfblock und (außer Soul und Brain) eine Datei in .claude/agents.
+- Jeder Skill hat name gleich Ordnername und eine description in einer Zeile.
+- Keine Verweise auf Dateien, die es nicht gibt.
+- CLAUDE.md ist schlank, AGENTS.md stimmt mit dem Ordnerstand überein.
+- Das Dashboard zeigt alles korrekt.
+- Probelauf: Frag mich nach einer kleinen echten Aufgabe (zum Beispiel einen Post, eine E-Mail oder eine Recherche) und führe sie über Brain und den passenden Agenten aus, damit ich sehe, wie es sich anfühlt.
+
+## PHASE 9: ABSCHLUSS
+
+Verschiebe START_HIER.md, STARTER_PROMPT.txt und FOLGEPROMPTS.md nach _Starter/. Gib mir dann einen kurzen Bericht:
+1. Der Ordnerbaum und die Zahlen (Agenten, Skills).
+2. Was eine Annahme war und was offen ist.
+3. Eine Seite "So benutze ich es": wie ich einen Agenten rufe ("Nutze den Agenten CodeMaster für ..."), wie ich einen Skill rufe (/skill-name oder einfach die Aufgabe sagen), wie ich mit einem Satz einen neuen Agenten oder Skill anlege, wie ich das Dashboard aktualisiere.
+4. Der Hinweis, dass Claude Code einmal neu gestartet werden muss, damit neu angelegte Agenten Dateien geladen werden.
+5. Ein Vorschlag, wie ich das System sichere (Kopie des Ordners oder ein privates Git Repository, ohne .env).
+6. Drei sinnvolle nächste Schritte für mich.
